@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 API_KEY = os.getenv('EXCHANGE_RATE_API_KEY')
-BASE_URL = f"https://v6.exchangerate-api.com/v6/{API_KEY}/latest/"
+BASE_URL = f"https://v6.exchangerate-api.com/v6/fd1fd1f2ae49726bed65ea7d/latest"
 
 # Cria o banco de dados na primeira execução
 with app.app_context():
@@ -49,7 +49,7 @@ def converter():
         dados_api = resposta.json()
 
         if dados_api.get('result') != 'success':
-            return jsonify({"erro": "Falha ao obter taxas de câmbio."}), 500
+            return jsonify({"erro": "Falha ao obter taxas de câmbio."}), 400
 
         taxas = dados_api.get('conversion_rates', {})
         if destino not in taxas:
@@ -77,6 +77,18 @@ def converter():
 
     except Exception as e:
         return jsonify({"erro": "Erro interno no servidor."}), 500
-
+@app.route('/api/moedas', methods=['GET'])
+def moedas():
+    # Rota que busca a lista de todas as moedas suportadas
+    try:
+        url_moedas = f"https://v6.exchangerate-api.com/v6/{API_KEY}/codes"
+        resposta = requests.get(url_moedas)
+        dados = resposta.json()
+        
+        if dados.get('result') == 'success':
+            return jsonify(dados.get('supported_codes', []))
+        return jsonify([])
+    except Exception as e:
+        return jsonify([])
 if __name__ == '__main__':
     app.run(debug=True)
