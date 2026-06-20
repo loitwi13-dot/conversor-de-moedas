@@ -1,3 +1,40 @@
+// Carrega a lista de moedas assim que o site abre
+document.addEventListener('DOMContentLoaded', async () => {
+    const origemSelect = document.getElementById('origem');
+    const destinoSelect = document.getElementById('destino');
+
+    try {
+        const resposta = await fetch('/api/moedas');
+        const moedas = await resposta.json();
+
+        // Limpa a mensagem de "Carregando..."
+        origemSelect.innerHTML = '';
+        destinoSelect.innerHTML = '';
+
+        // Cria uma opção para cada moeda recebida da API
+        moedas.forEach(([codigo, nome]) => {
+            const opcaoOrigem = document.createElement('option');
+            opcaoOrigem.value = codigo;
+            opcaoOrigem.textContent = `${codigo} - ${nome}`;
+            
+            // Deixa USD selecionado por padrão na origem
+            if (codigo === 'USD') opcaoOrigem.selected = true;
+            origemSelect.appendChild(opcaoOrigem);
+
+            const opcaoDestino = document.createElement('option');
+            opcaoDestino.value = codigo;
+            opcaoDestino.textContent = `${codigo} - ${nome}`;
+            
+            // Deixa BRL selecionado por padrão no destino
+            if (codigo === 'BRL') opcaoDestino.selected = true;
+            destinoSelect.appendChild(opcaoDestino);
+        });
+    } catch (erro) {
+        console.error("Erro ao carregar moedas:", erro);
+        origemSelect.innerHTML = '<option value="">Erro ao carregar lista</option>';
+        destinoSelect.innerHTML = '<option value="">Erro ao carregar lista</option>';
+    }
+});
 document.getElementById('form-conversao').addEventListener('submit', async function(e) {
     e.preventDefault();
     

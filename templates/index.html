@@ -23,12 +23,13 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="origem" class="form-label">De (Ex: USD)</label>
-                                    <input type="text" class="form-control" id="origem" maxlength="3" required>
-                                </div>
+                                    <label for="origem" class="form-label">De</label>
+                                    </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="destino" class="form-label">Para (Ex: BRL)</label>
-                                    <input type="text" class="form-control" id="destino" maxlength="3" required>
+                                    <label for="destino" class="form-label">Para</label>
+                                    <select class="form-select" id="destino" required>
+                                        <option value="" disabled selected>Carregando moedas...</option>
+                                    </select>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Converter</button>
